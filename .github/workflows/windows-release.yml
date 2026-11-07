@@ -1,0 +1,85 @@
+name: Build Cælōcord Windows Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  windows-exe:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.x'
+          cache: false
+
+      - name: Obtain Windows FFmpeg binary for the fully offline EXE
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $download = Join-Path $env:RUNNER_TEMP 'ffmpeg-release-essentials.zip'
+          $unpack = Join-Path $env:RUNNER_TEMP 'caelocord-ffmpeg'
+          Invoke-WebRequest 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip' -OutFile $download
+          Expand-Archive -LiteralPath $download -DestinationPath $unpack -Force
+          $binary = Get-ChildItem $unpack -Filter 'ffmpeg.exe' -File -Recurse | Select-Object -First 1
+          if ($null -eq $binary) { throw 'The FFmpeg download did not contain ffmpeg.exe' }
+          Copy-Item $binary.FullName 'Source-Code/launcher/payload/ffmpeg.exe'
+          $info = (& $binary.FullName -version | Select-Object -First 2) -join "`r`n"
+          $hash = (Get-FileHash $binary.FullName -Algorithm SHA256).Hash
+          @"
+          Cælōcord embeds the following FFmpeg build:
+          $info
+          FFmpeg binary SHA256: $hash
+          Download: https://www.gyan.dev/ffmpeg/builds/
+          FFmpeg license and corresponding source: https://ffmpeg.org/legal.html
+          Please verify and publish the corresponding FFmpeg sources and relevant
+          third-party licenses alongside any public binary distribution.
+          "@ | Set-Content -Path 'Release/FFMPEG_BUILD_INFO.txt' -Encoding utf8
+
+      - name: Generate application icon resource
+        shell: pwsh
+        run: |
+          python 'Source-Code/tools/make_icon_syso.py' 'Source-Code/launcher/Cælōcord.ico' 'Source-Code/launcher/icon_windows_amd64.syso'
+
+      - name: Build one-file release with embedded FFmpeg
+        shell: pwsh
+        working-directory: Source-Code/launcher
+        run: |
+          $env:GOOS = 'windows'
+          $env:GOARCH = 'amd64'
+          $env:CGO_ENABLED = '0'
+          go build -tags bundled_ffmpeg -trimpath -ldflags '-H windowsgui -s -w' -o '../../Release/Cælōcord.exe' .
+          if (!(Test-Path '../../Release/Cælōcord.exe')) { throw 'EXE output missing' }
+
+      - name: Publish CI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Caelocord-Windows-x64-FFmpeg-Embedded
+          path: |
+            Release/Cælōcord.exe
+            Release/FFMPEG_BUILD_INFO.txt
+            THIRD_PARTY_NOTICES.md
+          if-no-files-found: error
+
+      - name: Publish as GitHub Release when a v* tag is pushed
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = '${{ github.ref_name }}'
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag 'Release/Cælōcord.exe' 'Release/FFMPEG_BUILD_INFO.txt' 'THIRD_PARTY_NOTICES.md' --clobber
+          } else {
+            gh release create $tag 'Release/Cælōcord.exe' 'Release/FFMPEG_BUILD_INFO.txt' 'THIRD_PARTY_NOTICES.md' --generate-notes
+          }

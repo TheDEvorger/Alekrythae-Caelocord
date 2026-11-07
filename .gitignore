@@ -1,0 +1,9 @@
+# Locally generated and downloaded tools
+Source-Code/launcher/payload/ffmpeg.exe
+Source-Code/launcher/*.exe
+**/*.tmp
+**/*.log
+*.zip
+# Keep binaries out of git history; distribute via GitHub Releases instead.
+Release/*.exe
+Release/FFMPEG_BUILD_INFO.txt
