@@ -28,9 +28,9 @@ release contains FFmpeg and requires the additional checks described above.
 
 ## Visual artwork
 
-The Moon images are supplied by the project owner and are **not** covered by
-the MIT code license in this repository. The owner must confirm rights and
-specify image redistribution permission before making the repository public.
+The Moon images are provided by the project owner and are subject to the
+project proprietary license (LICENSE.md), where owned by the licensor.
+Independently licensed third-party artwork retains its respective terms.
 
 ## Windows and PowerShell
 

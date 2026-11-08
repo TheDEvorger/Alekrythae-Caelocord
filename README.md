@@ -12,10 +12,10 @@
   <img src="https://img.shields.io/badge/output-MP4%20%2F%20H.264-0F7ED8?style=for-the-badge" alt="MP4 / H.264" />
   <img src="https://img.shields.io/badge/interface-English-1A9BD7?style=for-the-badge" alt="English UI" />
   <img src="https://img.shields.io/badge/theme-Blue%20Moon-34C6FF?style=for-the-badge" alt="Blue Moon" />
-  <img src="https://img.shields.io/badge/license-MIT-6DD5FA?style=for-the-badge" alt="MIT" />
+  <img src="https://img.shields.io/badge/license-Proprietary-113F69?style=for-the-badge" alt="Proprietary" />
 </p>
 
-A Windows screen recording app with a **cosmic Blue Moon visual identity**, a clean single-window workflow, and a lightweight release path for GitHub distribution.
+A **source-available, proprietary** Windows screen recording app with a **cosmic Blue Moon visual identity** and a focused recording workflow. Personal use is subject to the [license](./LICENSE.md).
 
 </div>
 
@@ -72,7 +72,8 @@ A Windows screen recording app with a **cosmic Blue Moon visual identity**, a cl
 ```text
 Caelocord/
 ├─ README.md
-├─ LICENSE
+├─ LICENSE.md
+├─ SECURITY.md
 ├─ THIRD_PARTY_NOTICES.md
 ├─ assets/
 │  └─ caelocord-preview.png
@@ -127,13 +128,14 @@ The repository includes a **Go-based launcher** and the **PowerShell/WPF UI payl
 
 ---
 
-## 🔒 Privacy
+## 🔒 Privacy & Security
 
 Cælōcord is designed to keep recordings **local on the user’s computer**.
 
 - No cloud upload workflow is built in
 - No account system is required
 - No watermark is applied to exported recordings
+- Local recordings are not encrypted by Cælōcord; see [SECURITY.md](./SECURITY.md) for responsible reporting and security boundaries
 
 ---
 
@@ -153,8 +155,8 @@ Please still perform a **real Windows test pass** before public release.
 
 ## 📜 License
 
-This repository is distributed under the **MIT License** unless otherwise noted.  
-See **`LICENSE`** for details.
+**Copyright © 2026–present TheDEvorger. All Rights Reserved.**  
+Cælōcord is **source-available proprietary software, not open-source**. TheDEvorger Universal Proprietary Software License v1.3 permits limited personal use and restricts redistribution, modification, professional use, and commercial use. Read the full **[LICENSE.md](./LICENSE.md)** before use. Third-party components retain their own licenses. See **[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)**.
 
 ---
 
