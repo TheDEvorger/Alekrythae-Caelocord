@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./Source-Code/launcher/payload/art/mavi-ay-amblem.png" alt="Cælōcord logo" width="110" />
+<img src="./assets/caelocord-logo.png" alt="Cælōcord logo" width="110" />
 
 # CÆLŌCORD
 ### Blue Moon Edition
